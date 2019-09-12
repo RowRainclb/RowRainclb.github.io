@@ -1,0 +1,724 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/clb/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/clb/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="java,poi,excel,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="使用poi解析带有分组级别的excel文件，并且递归封装为java父子级对象最近从客户那里拿了一份excel数据，需要导入到数据库，心想挺简单的，所以忙了一天，到晚上才开始弄，结果发现excel带有组合信息，搞了好一会才弄好，所以总结一下  首先excel带组合信息的话，仔细看会发现，子类们的父类都是他们的上一条，所以可以考虑先读出数据，再使用递归的方式封装  下面附上代码：12345678910">
+<meta name="keywords" content="java,poi,excel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用poi解析带分组级别的excel文件">
+<meta property="og:url" content="http://clb7rowrain.com/2017/09/01/用poi解析带分组级别的excel文件/index.html">
+<meta property="og:site_name" content="clb&#39;blog">
+<meta property="og:description" content="使用poi解析带有分组级别的excel文件，并且递归封装为java父子级对象最近从客户那里拿了一份excel数据，需要导入到数据库，心想挺简单的，所以忙了一天，到晚上才开始弄，结果发现excel带有组合信息，搞了好一会才弄好，所以总结一下  首先excel带组合信息的话，仔细看会发现，子类们的父类都是他们的上一条，所以可以考虑先读出数据，再使用递归的方式封装  下面附上代码：12345678910">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-20T11:28:55.043Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用poi解析带分组级别的excel文件">
+<meta name="twitter:description" content="使用poi解析带有分组级别的excel文件，并且递归封装为java父子级对象最近从客户那里拿了一份excel数据，需要导入到数据库，心想挺简单的，所以忙了一天，到晚上才开始弄，结果发现excel带有组合信息，搞了好一会才弄好，所以总结一下  首先excel带组合信息的话，仔细看会发现，子类们的父类都是他们的上一条，所以可以考虑先读出数据，再使用递归的方式封装  下面附上代码：12345678910">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://clb7rowrain.com/2017/09/01/用poi解析带分组级别的excel文件/">
+
+
+
+
+
+  <title> 用poi解析带分组级别的excel文件 | clb'blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+   <a href="https://github.com/RowRainclb"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
+
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">clb'blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">all is well</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://clb7rowrain.com/2017/09/01/用poi解析带分组级别的excel文件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="clb">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="clb'blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                用poi解析带分组级别的excel文件
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-01T21:14:26+08:00">
+                2017-09-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="使用poi解析带有分组级别的excel文件，并且递归封装为java父子级对象"><a href="#使用poi解析带有分组级别的excel文件，并且递归封装为java父子级对象" class="headerlink" title="使用poi解析带有分组级别的excel文件，并且递归封装为java父子级对象"></a>使用poi解析带有分组级别的excel文件，并且递归封装为java父子级对象</h1><p>最近从客户那里拿了一份excel数据，需要导入到数据库，心想挺简单的，所以忙了一天，到晚上才开始弄，结果发现excel带有组合信息，搞了好一会才弄好，所以总结一下<br>  首先excel带组合信息的话，仔细看会发现，子类们的父类都是他们的上一条，所以可以考虑先读出数据，再使用递归的方式封装<br>  下面附上代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--  excel poi --&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.apache.poi&lt;<span class="regexp">/groupId&gt;</span></span><br><span class="line"><span class="regexp">			&lt;artifactId&gt;poi&lt;/</span>artifactId&gt;</span><br><span class="line">			&lt;version&gt;<span class="number">3.5</span>-FINAL&lt;<span class="regexp">/version&gt;</span></span><br><span class="line"><span class="regexp">		&lt;/</span>dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.apache.poi&lt;<span class="regexp">/groupId&gt;</span></span><br><span class="line"><span class="regexp">			&lt;artifactId&gt;poi-ooxml&lt;/</span>artifactId&gt;</span><br><span class="line">			&lt;version&gt;<span class="number">3.5</span>-FINAL&lt;<span class="regexp">/version&gt;</span></span><br><span class="line"><span class="regexp">		&lt;/</span>dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br></pre></td><td class="code"><pre><span class="line">package com.example.demo.FileUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.example.demo.po.ExcelObject;</span><br><span class="line"><span class="keyword">import</span> org.apache.poi.hssf.usermodel.HSSFCell;</span><br><span class="line"><span class="keyword">import</span> org.apache.poi.hssf.usermodel.HSSFRow;</span><br><span class="line"><span class="keyword">import</span> org.apache.poi.hssf.usermodel.HSSFSheet;</span><br><span class="line"><span class="keyword">import</span> org.apache.poi.hssf.usermodel.HSSFWorkbook;</span><br><span class="line"><span class="keyword">import</span> org.apache.poi.ss.usermodel.Cell;</span><br><span class="line"><span class="keyword">import</span> org.apache.poi.xssf.usermodel.XSSFCell;</span><br><span class="line"><span class="keyword">import</span> org.apache.poi.xssf.usermodel.XSSFRow;</span><br><span class="line"><span class="keyword">import</span> org.apache.poi.xssf.usermodel.XSSFSheet;</span><br><span class="line"><span class="keyword">import</span> org.apache.poi.xssf.usermodel.XSSFWorkbook;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * excel 操作</span></span><br><span class="line"><span class="comment"> * Created by cuilb3 on 2017/8/29.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">Excel</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    public <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="built_in">String</span>[] args) &#123;</span><br><span class="line">        <span class="built_in">String</span> path = <span class="string">"E:\\26305.xlsm"</span>;<span class="comment">//源文件</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            List&lt;List&lt;<span class="built_in">String</span>&gt;&gt; result = <span class="keyword">new</span> Excel().readXlsx(path);</span><br><span class="line">            System.out.println(result.size());</span><br><span class="line">            List&lt;ExcelObject&gt; excelObjects = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">            <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; result.size(); i++) &#123;</span><br><span class="line">                ExcelObject excelObject = <span class="keyword">new</span> ExcelObject();</span><br><span class="line">                List&lt;<span class="built_in">String</span>&gt; model = result.get(i);</span><br><span class="line">                excelObject.setId(model.get(<span class="number">0</span>));</span><br><span class="line">                excelObject.setName(model.get(<span class="number">1</span>));</span><br><span class="line">                excelObject.setMark(model.get(<span class="number">2</span>));</span><br><span class="line">                excelObject.setType(model.get(<span class="number">5</span>));</span><br><span class="line">                excelObject.setLevel(model.get(model.size()<span class="number">-1</span>));</span><br><span class="line">                excelObjects.add(excelObject);</span><br><span class="line">                System.out.println(<span class="string">"num1:"</span> + model.get(<span class="number">0</span>) + <span class="string">"--&gt; name:"</span> + model.get(<span class="number">1</span>)+<span class="string">"---&gt;"</span>+model.get(model.size()<span class="number">-1</span>));</span><br><span class="line">            &#125;</span><br><span class="line">            List&lt;ExcelObject&gt; list = getGroup(<span class="number">0</span>,excelObjects);</span><br><span class="line"></span><br><span class="line">            File tmpfile = <span class="keyword">new</span> File(<span class="string">"E:\\k2\\sql\\excel_template_device_bom_etl.sql"</span>);</span><br><span class="line">            BufferedWriter writer = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> FileWriter(tmpfile));</span><br><span class="line">            <span class="comment">//设置父类id和id,并写入文件sql语句</span></span><br><span class="line">            LogInfo(<span class="string">"0"</span>,list,writer);</span><br><span class="line">            writer.flush();</span><br><span class="line">            writer.close();</span><br><span class="line">            System.out.println(list);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//开始插入数据库的第一条的id,数据库中最后一条加上1</span></span><br><span class="line">    <span class="keyword">static</span> int num = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 生产sql文件</span></span><br><span class="line"><span class="comment">    **/</span></span><br><span class="line">    public <span class="keyword">static</span> int  LogInfo(<span class="built_in">String</span> parentId,List&lt;ExcelObject&gt; list,BufferedWriter writer) throws IOException &#123;</span><br><span class="line">        <span class="keyword">for</span>(int i =<span class="number">0</span> ;i&lt;list.size();i++)&#123;</span><br><span class="line">            list.get(i).setId(num+<span class="string">""</span>);</span><br><span class="line">            list.get(i).setParentId(parentId);</span><br><span class="line"> 	    writer.write(<span class="string">"insert into device (id,device_no,name,type,remark,is_root) values ('"</span>+num+<span class="string">"','a_b_"</span>+num+<span class="string">"','"</span>+list.get(i).getName()+<span class="string">"','"</span>+list.get(i).getType()+<span class="string">"','"</span>+list.get(i).getMark()+<span class="string">"',0);"</span> + <span class="string">"\n"</span>);</span><br><span class="line">            writer.write(<span class="string">"insert into device_bom (id,device_id,parent_id) values ('"</span>+num+<span class="string">"','"</span>+num+<span class="string">"','"</span>+Integer.parseInt(parentId) + <span class="string">"');\n"</span>);</span><br><span class="line">            num++;</span><br><span class="line">            <span class="keyword">if</span>(list.get(i).getChildren()!=<span class="literal">null</span>&amp;&amp;list.get(i).getChildren().size()&gt;<span class="number">0</span>)&#123;</span><br><span class="line">                LogInfo(list.get(i).getId(),list.get(i).getChildren(),writer);</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取分组树节信息</span></span><br><span class="line"><span class="comment">     * @param list</span></span><br><span class="line"><span class="comment">     * @return</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">static</span> int startPoint = <span class="number">0</span> ;</span><br><span class="line">    public <span class="keyword">static</span>  List&lt;ExcelObject&gt; getGroup(int start,List&lt;ExcelObject&gt; list)&#123;</span><br><span class="line">        List&lt;ExcelObject&gt; excelObjects = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(int i = start ;i&lt;list.size();i++)&#123;</span><br><span class="line">            ExcelObject excelObject = list.get(i);</span><br><span class="line">            <span class="keyword">if</span>(excelObjects.size()==<span class="number">0</span>)&#123;</span><br><span class="line">                excelObjects.add(excelObject);</span><br><span class="line">                System.out.println(<span class="string">"startPoint:"</span>+startPoint+<span class="string">"    ----&gt;  i="</span>+i);</span><br><span class="line">                startPoint++;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span> (excelObject.getLevel().equals(excelObjects.get(excelObjects.size()<span class="number">-1</span>).getLevel()))&#123;</span><br><span class="line">                excelObjects.add(excelObject);</span><br><span class="line">                System.out.println(<span class="string">"startPoint:"</span>+startPoint+<span class="string">"    --&gt;  i="</span>+i);</span><br><span class="line">                startPoint++;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//等级大，继续递归</span></span><br><span class="line">                <span class="keyword">if</span>(Integer.valueOf(excelObject.getLevel())&gt;Integer.valueOf(excelObjects.get(excelObjects.size()<span class="number">-1</span>).getLevel()))&#123;</span><br><span class="line">                    List chidren  = getGroup(startPoint,list);</span><br><span class="line">                    i=startPoint<span class="number">-1</span>;</span><br><span class="line">                    List oldchildren = excelObjects.get(excelObjects.size()<span class="number">-1</span>).getChildren();</span><br><span class="line">                    <span class="keyword">if</span>(oldchildren!=<span class="literal">null</span> &amp;&amp; oldchildren.size()&gt;<span class="number">0</span>)&#123;</span><br><span class="line">                        oldchildren.addAll(chidren);</span><br><span class="line">                        excelObjects.get(excelObjects.size()<span class="number">-1</span>).setChildren(oldchildren);</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        excelObjects.get(excelObjects.size()<span class="number">-1</span>).setChildren(chidren);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">return</span> excelObjects;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> excelObjects;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * @Title: readXls</span></span><br><span class="line"><span class="comment">     * @Description: 处理xls文件</span></span><br><span class="line"><span class="comment">     *  从代码不难发现其处理逻辑：</span></span><br><span class="line"><span class="comment">     * 1.先用InputStream获取excel文件的io流</span></span><br><span class="line"><span class="comment">     * 2.然后穿件一个内存中的excel文件HSSFWorkbook类型对象，这个对象表示了整个excel文件。</span></span><br><span class="line"><span class="comment">     * 3.对这个excel文件的每页做循环处理</span></span><br><span class="line"><span class="comment">     * 4.对每页中每行做循环处理</span></span><br><span class="line"><span class="comment">     * 5.对每行中的每个单元格做处理，获取这个单元格的值</span></span><br><span class="line"><span class="comment">     * 6.把这行的结果添加到一个List数组中</span></span><br><span class="line"><span class="comment">     * 7.把每行的结果添加到最后的总结果中</span></span><br><span class="line"><span class="comment">     * 8.解析完以后就获取了一个List&lt;List&lt;String&gt;&gt;类型的对象了</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * @param @param path</span></span><br><span class="line"><span class="comment">     * @param @return</span></span><br><span class="line"><span class="comment">     * @param @throws Exception    设定文件</span></span><br><span class="line"><span class="comment">     * @return List&lt;List&lt;String&gt;&gt;    返回类型</span></span><br><span class="line"><span class="comment">     * @throws</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    private List&lt;List&lt;<span class="built_in">String</span>&gt;&gt; readXls(<span class="built_in">String</span> path) throws Exception &#123;</span><br><span class="line">        InputStream is = <span class="keyword">new</span> FileInputStream(path);</span><br><span class="line">        <span class="comment">// HSSFWorkbook 标识整个excel</span></span><br><span class="line">        HSSFWorkbook hssfWorkbook = <span class="keyword">new</span> HSSFWorkbook(is);</span><br><span class="line">        List&lt;List&lt;<span class="built_in">String</span>&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;List&lt;<span class="built_in">String</span>&gt;&gt;();</span><br><span class="line">        int size = hssfWorkbook.getNumberOfSheets();</span><br><span class="line">        <span class="comment">// 循环每一页，并处理当前循环页</span></span><br><span class="line">        <span class="keyword">for</span> (int numSheet = <span class="number">0</span>; numSheet &lt; size; numSheet++) &#123;</span><br><span class="line">            <span class="comment">// HSSFSheet 标识某一页</span></span><br><span class="line">            HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(numSheet);</span><br><span class="line">            <span class="keyword">if</span> (hssfSheet == <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 处理当前页，循环读取每一行</span></span><br><span class="line">            <span class="keyword">for</span> (int rowNum = <span class="number">1</span>; rowNum &lt;= hssfSheet.getLastRowNum(); rowNum++) &#123;</span><br><span class="line">                <span class="comment">// HSSFRow表示行</span></span><br><span class="line">                HSSFRow hssfRow = hssfSheet.getRow(rowNum);</span><br><span class="line">                int minColIx = hssfRow.getFirstCellNum();</span><br><span class="line">                int maxColIx = hssfRow.getLastCellNum();</span><br><span class="line">                List&lt;<span class="built_in">String</span>&gt; rowList = <span class="keyword">new</span> ArrayList&lt;<span class="built_in">String</span>&gt;();</span><br><span class="line">                <span class="comment">// 遍历改行，获取处理每个cell元素</span></span><br><span class="line">                <span class="keyword">for</span> (int colIx = minColIx; colIx &lt; maxColIx; colIx++) &#123;</span><br><span class="line">                    <span class="comment">// HSSFCell 表示单元格</span></span><br><span class="line">                    HSSFCell cell = hssfRow.getCell(colIx);</span><br><span class="line">                    <span class="keyword">if</span> (cell == <span class="literal">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    rowList.add(getStringVal(cell));</span><br><span class="line">                &#125;</span><br><span class="line">                result.add(rowList);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * @Title: readXlsx</span></span><br><span class="line"><span class="comment">     * @Description: 处理Xlsx文件</span></span><br><span class="line"><span class="comment">     * @param @param path</span></span><br><span class="line"><span class="comment">     * @param @return</span></span><br><span class="line"><span class="comment">     * @param @throws Exception    设定文件</span></span><br><span class="line"><span class="comment">     * @return List&lt;List&lt;String&gt;&gt;    返回类型</span></span><br><span class="line"><span class="comment">     * @throws</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    private List&lt;List&lt;<span class="built_in">String</span>&gt;&gt; readXlsx(<span class="built_in">String</span> path) throws Exception &#123;</span><br><span class="line">        InputStream is = <span class="keyword">new</span> FileInputStream(path);</span><br><span class="line">        XSSFWorkbook xssfWorkbook = <span class="keyword">new</span> XSSFWorkbook(is);</span><br><span class="line">        List&lt;List&lt;<span class="built_in">String</span>&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;List&lt;<span class="built_in">String</span>&gt;&gt;();</span><br><span class="line">        <span class="comment">// 循环每一页，并处理当前循环页</span></span><br><span class="line">        <span class="keyword">for</span> (XSSFSheet xssfSheet : xssfWorkbook) &#123;</span><br><span class="line">            <span class="keyword">if</span> (xssfSheet == <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 处理当前页，循环读取每一行</span></span><br><span class="line">            <span class="keyword">for</span> (int rowNum = <span class="number">1</span>; rowNum &lt;= xssfSheet.getLastRowNum(); rowNum++) &#123;</span><br><span class="line">                XSSFRow xssfRow = xssfSheet.getRow(rowNum);</span><br><span class="line">                int minColIx = xssfRow.getFirstCellNum();</span><br><span class="line">                int maxColIx = xssfRow.getLastCellNum();</span><br><span class="line">                List&lt;<span class="built_in">String</span>&gt; rowList = <span class="keyword">new</span> ArrayList&lt;<span class="built_in">String</span>&gt;();</span><br><span class="line">                <span class="keyword">for</span> (int colIx = minColIx; colIx &lt; maxColIx; colIx++) &#123;</span><br><span class="line">                    XSSFCell cell = xssfRow.getCell(colIx);</span><br><span class="line">                    <span class="keyword">if</span> (cell == <span class="literal">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    rowList.add(cell.toString());</span><br><span class="line">                &#125;</span><br><span class="line">                rowList.add(<span class="built_in">String</span>.valueOf(xssfRow.getCTRow().getOutlineLevel()));</span><br><span class="line">                result.add(rowList);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 存在的问题</span></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 其实有时候我们希望得到的数据就是excel中的数据，可是最后发现结果不理想</span></span><br><span class="line"><span class="comment">     * 如果你的excel中的数据是数字，你会发现Java中对应的变成了科学计数法。</span></span><br><span class="line"><span class="comment">     * 所以在获取值的时候就要做一些特殊处理来保证得到自己想要的结果</span></span><br><span class="line"><span class="comment">     * 网上的做法是对于数值型的数据格式化，获取自己想要的结果。</span></span><br><span class="line"><span class="comment">     * 下面提供另外一种方法，在此之前，我们先看一下poi中对于toString()方法:</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 该方法是poi的方法，从源码中我们可以发现，该处理流程是：</span></span><br><span class="line"><span class="comment">     * 1.获取单元格的类型</span></span><br><span class="line"><span class="comment">     * 2.根据类型格式化数据并输出。这样就产生了很多不是我们想要的</span></span><br><span class="line"><span class="comment">     * 故对这个方法做一个改造。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="comment">/*public String toString()&#123;</span></span><br><span class="line"><span class="comment">        switch(getCellType())&#123;</span></span><br><span class="line"><span class="comment">            case CELL_TYPE_BLANK:</span></span><br><span class="line"><span class="comment">                return "";</span></span><br><span class="line"><span class="comment">            case CELL_TYPE_BOOLEAN:</span></span><br><span class="line"><span class="comment">                return getBooleanCellValue() ? "TRUE" : "FALSE";</span></span><br><span class="line"><span class="comment">            case CELL_TYPE_ERROR:</span></span><br><span class="line"><span class="comment">                return ErrorEval.getText(getErrorCellValue());</span></span><br><span class="line"><span class="comment">            case CELL_TYPE_FORMULA:</span></span><br><span class="line"><span class="comment">                return getCellFormula();</span></span><br><span class="line"><span class="comment">            case CELL_TYPE_NUMERIC:</span></span><br><span class="line"><span class="comment">                if(DateUtil.isCellDateFormatted(this))&#123;</span></span><br><span class="line"><span class="comment">                    DateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy")</span></span><br><span class="line"><span class="comment">                    return sdf.format(getDateCellValue());</span></span><br><span class="line"><span class="comment">                &#125;</span></span><br><span class="line"><span class="comment">                return getNumericCellValue() + "";</span></span><br><span class="line"><span class="comment">            case CELL_TYPE_STRING:</span></span><br><span class="line"><span class="comment">                return getRichStringCellValue().toString();</span></span><br><span class="line"><span class="comment">            default :</span></span><br><span class="line"><span class="comment">                return "Unknown Cell Type:" + getCellType();</span></span><br><span class="line"><span class="comment">        &#125;</span></span><br><span class="line"><span class="comment">    &#125;*/</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 改造poi默认的toString（）方法如下</span></span><br><span class="line"><span class="comment">     * @Title: getStringVal</span></span><br><span class="line"><span class="comment">     * @Description: 1.对于不熟悉的类型，或者为空则返回""控制串</span></span><br><span class="line"><span class="comment">     *               2.如果是数字，则修改单元格类型为String，然后返回String，这样就保证数字不被格式化了</span></span><br><span class="line"><span class="comment">     * @param @param cell</span></span><br><span class="line"><span class="comment">     * @param @return    设定文件</span></span><br><span class="line"><span class="comment">     * @return String    返回类型</span></span><br><span class="line"><span class="comment">     * @throws</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    public <span class="keyword">static</span> <span class="built_in">String</span> getStringVal(HSSFCell cell) &#123;</span><br><span class="line">        <span class="keyword">switch</span> (cell.getCellType()) &#123;</span><br><span class="line">            <span class="keyword">case</span> Cell.CELL_TYPE_BOOLEAN:</span><br><span class="line">                <span class="keyword">return</span> cell.getBooleanCellValue() ? <span class="string">"TRUE"</span> : <span class="string">"FALSE"</span>;</span><br><span class="line">            <span class="keyword">case</span> Cell.CELL_TYPE_FORMULA:</span><br><span class="line">                <span class="keyword">return</span> cell.getCellFormula();</span><br><span class="line">            <span class="keyword">case</span> Cell.CELL_TYPE_NUMERIC:</span><br><span class="line">                cell.setCellType(Cell.CELL_TYPE_STRING);</span><br><span class="line">                <span class="keyword">return</span> cell.getStringCellValue();</span><br><span class="line">            <span class="keyword">case</span> Cell.CELL_TYPE_STRING:</span><br><span class="line">                <span class="keyword">return</span> cell.getStringCellValue();</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+  
+</div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
+          
+            <a href="/tags/poi/" rel="tag"><i class="fa fa-tag"></i> poi</a>
+          
+            <a href="/tags/excel/" rel="tag"><i class="fa fa-tag"></i> excel</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/22/aws在java中使用/" rel="next" title="aws在java中使用">
+                <i class="fa fa-chevron-left"></i> aws在java中使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/19/docker的mysql8镜像-数据库乱码问题/" rel="prev" title="docker的mysql8镜像,数据库乱码问题">
+                docker的mysql8镜像,数据库乱码问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="clb">
+          <p class="site-author-name" itemprop="name">clb</p>
+           
+              <p class="site-description motion-element" itemprop="description">IT JAVA</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用poi解析带有分组级别的excel文件，并且递归封装为java父子级对象"><span class="nav-number">1.</span> <span class="nav-text">使用poi解析带有分组级别的excel文件，并且递归封装为java父子级对象</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">clb</span>
+</div>
+
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/clb/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/clb/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/clb/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/clb/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/clb/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/clb/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/clb/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>

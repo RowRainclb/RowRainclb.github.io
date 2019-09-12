@@ -1,0 +1,708 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/clb/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/clb/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="aws,dynamodb,java,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="一 AWS DynamoDb在java中的使用【建立连接】123456789101112131415161718192021222324accessKey = “xxxxxxx”;secretKey = “xxxxxxxx”if (StringUtils.isNotBlank(accessKey) &amp;amp;&amp;amp; StringUtils.isNotBlank(secretKey)) &amp;#12">
+<meta name="keywords" content="aws,dynamodb,java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="aws在java中使用">
+<meta property="og:url" content="http://clb7rowrain.com/2017/08/22/aws在java中使用/index.html">
+<meta property="og:site_name" content="clb&#39;blog">
+<meta property="og:description" content="一 AWS DynamoDb在java中的使用【建立连接】123456789101112131415161718192021222324accessKey = “xxxxxxx”;secretKey = “xxxxxxxx”if (StringUtils.isNotBlank(accessKey) &amp;amp;&amp;amp; StringUtils.isNotBlank(secretKey)) &amp;#12">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-20T11:28:54.959Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="aws在java中使用">
+<meta name="twitter:description" content="一 AWS DynamoDb在java中的使用【建立连接】123456789101112131415161718192021222324accessKey = “xxxxxxx”;secretKey = “xxxxxxxx”if (StringUtils.isNotBlank(accessKey) &amp;amp;&amp;amp; StringUtils.isNotBlank(secretKey)) &amp;#12">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://clb7rowrain.com/2017/08/22/aws在java中使用/">
+
+
+
+
+
+  <title> aws在java中使用 | clb'blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+   <a href="https://github.com/RowRainclb"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
+
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">clb'blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">all is well</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://clb7rowrain.com/2017/08/22/aws在java中使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="clb">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="clb'blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                aws在java中使用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-22T17:01:57+08:00">
+                2017-08-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一 AWS DynamoDb在java中的使用【建立连接】<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">accessKey = “xxxxxxx”;</span><br><span class="line">secretKey = “xxxxxxxx”</span><br><span class="line"><span class="keyword">if</span> (StringUtils.isNotBlank(accessKey) &amp;&amp; StringUtils.isNotBlank(secretKey)) &#123;</span><br><span class="line">   logger.debug(<span class="string">"accessKey和secretKey有值,不是写在系统配置里的方式"</span>);</span><br><span class="line">   bac = <span class="keyword">new</span> BasicAWSCredentials(accessKey, secretKey);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (bac != <span class="literal">null</span>) &#123; </span><br><span class="line">   client = <span class="keyword">new</span> AmazonDynamoDBClient(bac);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">   client = <span class="keyword">new</span> AmazonDynamoDBClient();</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">String</span> region= “china”;</span><br><span class="line"><span class="keyword">if</span> (region!= <span class="literal">null</span> &amp;&amp; region.trim().equals(<span class="string">"china"</span>)) &#123;</span><br><span class="line">   logger.debug(<span class="string">"中国区域"</span>);</span><br><span class="line">   regions = Regions.CN_NORTH_1;</span><br><span class="line">   client.withRegion(Region.getRegion(Regions.CN_NORTH_1));</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">   logger.debug(<span class="string">"us-west-2"</span>);</span><br><span class="line">   regions = Regions.US_WEST_2;</span><br><span class="line">   client.withRegion(Region.getRegion(Regions.US_WEST_2));</span><br><span class="line">   <span class="comment">//client.setEndpoint("https://dynamodb.us-west-2.amazonaws.com");</span></span><br><span class="line">&#125;</span><br><span class="line">dynamoDB = <span class="keyword">new</span> DynamoDB(client);</span><br><span class="line">mapper = <span class="keyword">new</span> DynamoDBMapper(client);</span><br></pre></td></tr></table></figure></p>
+<p>二 AWS DynamoDb在java中的使用【建表】<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * create a table in dynamodb of aws</span></span><br><span class="line"><span class="comment">    * 创建aws表</span></span><br><span class="line"><span class="comment">    * @param tableName          the name of table</span></span><br><span class="line"><span class="comment">    * @param key                分区键(主键)</span></span><br><span class="line"><span class="comment">    * @param keyType</span></span><br><span class="line"><span class="comment">    * @param readCapacityUnits</span></span><br><span class="line"><span class="comment">    * @param writeCapacityUnits</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   public <span class="keyword">void</span> createTable(<span class="built_in">String</span> tableName, <span class="built_in">String</span> key, <span class="built_in">String</span> keyType, Long readCapacityUnits, Long writeCapacityUnits) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">         ArrayList&lt;AttributeDefinition&gt; attributeDefinitions = <span class="keyword">new</span> ArrayList&lt;AttributeDefinition&gt;();</span><br><span class="line">         attributeDefinitions.add(<span class="keyword">new</span> AttributeDefinition()</span><br><span class="line">               .withAttributeName(key)</span><br><span class="line"><span class="comment">//             .withAttributeType("N"));</span></span><br><span class="line">               .withAttributeType(keyType));</span><br><span class="line">         ArrayList&lt;KeySchemaElement&gt; keySchema = <span class="keyword">new</span> ArrayList&lt;KeySchemaElement&gt;();</span><br><span class="line">         keySchema.add(<span class="keyword">new</span> KeySchemaElement()</span><br><span class="line">               .withAttributeName(key)</span><br><span class="line">               .withKeyType(KeyType.HASH)); <span class="comment">//Partition key</span></span><br><span class="line">         CreateTableRequest request = <span class="keyword">new</span> CreateTableRequest()</span><br><span class="line">               .withTableName(tableName)</span><br><span class="line">               .withKeySchema(keySchema)</span><br><span class="line">               .withAttributeDefinitions(attributeDefinitions)</span><br><span class="line">               .withProvisionedThroughput(<span class="keyword">new</span> ProvisionedThroughput()</span><br><span class="line">               .withReadCapacityUnits(readCapacityUnits)</span><br><span class="line">               .withWriteCapacityUnits(writeCapacityUnits));</span><br><span class="line">         System.out.println(<span class="string">"Issuing CreateTable request for "</span> + tableName);</span><br><span class="line">         Table table = dynamoDB.createTable(request);</span><br><span class="line">         System.out.println(<span class="string">"Waiting for "</span> + tableName</span><br><span class="line">               + <span class="string">" to be created...this may take a while..."</span>);</span><br><span class="line">         table.waitForActive();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">         System.err.println(<span class="string">"CreateTable request failed for "</span> + tableName);</span><br><span class="line">         System.err.println(e.getMessage());</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>三 AWS DynamoDb在java中的使用【获取表信息】<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Test the infomation of table</span></span><br><span class="line"><span class="comment"> * 获取表的详细信息，描述等属性</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">public <span class="keyword">void</span> getTableInformation() &#123;</span><br><span class="line">   System.out.println(<span class="string">"Describing "</span> + tableName);</span><br><span class="line">   TableDescription tableDescription = dynamoDB.getTable(tableName).describe();</span><br><span class="line">   System.out.format(<span class="string">"Name: %s:\n"</span> + <span class="string">"Status: %s \n"</span></span><br><span class="line">               + <span class="string">"Provisioned Throughput (read capacity units/sec): %d \n"</span></span><br><span class="line">               + <span class="string">"Provisioned Throughput (write capacity units/sec): %d \n"</span>,</span><br><span class="line">         tableDescription.getTableName(),</span><br><span class="line">         tableDescription.getTableStatus(),</span><br><span class="line">         tableDescription.getProvisionedThroughput().getReadCapacityUnits(),</span><br><span class="line">         tableDescription.getProvisionedThroughput().getWriteCapacityUnits());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>四 AWS DynamoDb在java中的使用【查询所有表】<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * List all tables</span></span><br><span class="line"><span class="comment"> * 查询dynamodb 所有的表</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">public <span class="keyword">void</span> listMyTables() &#123;</span><br><span class="line">   TableCollection&lt;ListTablesResult&gt; tables = dynamoDB.listTables();</span><br><span class="line">   Iterator&lt;Table&gt; iterator = tables.iterator();</span><br><span class="line">   System.out.println(<span class="string">"Listing table names"</span>);</span><br><span class="line">   <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">      Table table = iterator.next();</span><br><span class="line">      System.out.println(table.getTableName());</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>五 AWS DynamoDb在java中的使用【映射查询】<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 查询</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * @param o     表对应的对象</span></span><br><span class="line"><span class="comment"> * @param clazz 表对应的类</span></span><br><span class="line"><span class="comment"> * @return</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">public &lt;T&gt; List&lt;T&gt; query(T o, Class&lt;T&gt; clazz) &#123;</span><br><span class="line">   DynamoDBQueryExpression&lt;T&gt; queryExpression = <span class="keyword">new</span> DynamoDBQueryExpression&lt;T&gt;()</span><br><span class="line">         .withHashKeyValues(o);</span><br><span class="line">   List&lt;T&gt; itemList = mapper.query(clazz, queryExpression);</span><br><span class="line">   <span class="keyword">return</span> itemList;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="built_in">String</span>[] args) &#123;</span><br><span class="line">   AWSUtilAPI awsUtilAPI = AWSUtilAPI.getInstanceVersion3();</span><br><span class="line">   DynomadbObject dlc = <span class="keyword">new</span> DynomadbObject();</span><br><span class="line">   dlc.setBatch(<span class="string">""</span>);</span><br><span class="line">   List&lt;DynomadbObject&gt; dlcs= awsUtilAPI.query(dlc,DynomadbObject.class);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>类DynomadbObject<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">package com.test.util;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;</span><br><span class="line"><span class="keyword">import</span> com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;</span><br><span class="line"><span class="keyword">import</span> com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;</span><br><span class="line"><span class="keyword">import</span> com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;</span><br><span class="line">@DynamoDBTable(tableName=<span class="string">"td1"</span>)</span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">DynomadbObject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">      private <span class="built_in">String</span> batch; <span class="comment">//不要用 "#" "()" "空格"这三种字符，amazon识别为非法字符，建议使用 "_" "-"这两种</span></span><br><span class="line">      private <span class="built_in">String</span> job;</span><br><span class="line">      private <span class="built_in">String</span> category;</span><br><span class="line">      private int length;</span><br><span class="line">      private <span class="built_in">String</span> runname;</span><br><span class="line">      private <span class="built_in">String</span> status;</span><br><span class="line">      private <span class="built_in">String</span> progress;</span><br><span class="line">      </span><br><span class="line">      @DynamoDBHashKey(attributeName=<span class="string">"batch"</span>) </span><br><span class="line">      public <span class="built_in">String</span> getBatch() &#123;</span><br><span class="line">         <span class="keyword">return</span> batch;</span><br><span class="line">      &#125;</span><br><span class="line">      public <span class="keyword">void</span> setBatch(<span class="built_in">String</span> batch) &#123;</span><br><span class="line">         <span class="keyword">this</span>.batch = batch;</span><br><span class="line">      &#125;</span><br><span class="line">      @DynamoDBRangeKey(attributeName=<span class="string">"job"</span>) </span><br><span class="line">      public <span class="built_in">String</span> getJob() &#123;</span><br><span class="line">         <span class="keyword">return</span> job;</span><br><span class="line">      &#125;</span><br><span class="line">      public <span class="keyword">void</span> setJob(<span class="built_in">String</span> job) &#123;</span><br><span class="line">         <span class="keyword">this</span>.job = job;</span><br><span class="line">      &#125;</span><br><span class="line">      @DynamoDBAttribute(attributeName=<span class="string">"category"</span>) </span><br><span class="line">      public <span class="built_in">String</span> getCategory() &#123;</span><br><span class="line">         <span class="keyword">return</span> category;</span><br><span class="line">      &#125;</span><br><span class="line">      public <span class="keyword">void</span> setCategory(<span class="built_in">String</span> category) &#123;</span><br><span class="line">         <span class="keyword">this</span>.category = category;</span><br><span class="line">      &#125;</span><br><span class="line">      @DynamoDBAttribute(attributeName=<span class="string">"length"</span>) </span><br><span class="line">      public int getLength() &#123;</span><br><span class="line">         <span class="keyword">return</span> length;</span><br><span class="line">      &#125;</span><br><span class="line">      public <span class="keyword">void</span> setLength(int length) &#123;</span><br><span class="line">         <span class="keyword">this</span>.length = length;</span><br><span class="line">      &#125;</span><br><span class="line">      @DynamoDBAttribute(attributeName=<span class="string">"runname"</span>) </span><br><span class="line">      public <span class="built_in">String</span> getRunname() &#123;</span><br><span class="line">         <span class="keyword">return</span> runname;</span><br><span class="line">      &#125;</span><br><span class="line">      public <span class="keyword">void</span> setRunname(<span class="built_in">String</span> runname) &#123;</span><br><span class="line">         <span class="keyword">this</span>.runname = runname;</span><br><span class="line">      &#125;</span><br><span class="line">      @DynamoDBAttribute(attributeName=<span class="string">"status"</span>) </span><br><span class="line">      public <span class="built_in">String</span> getStatus() &#123;</span><br><span class="line">         <span class="keyword">return</span> status;</span><br><span class="line">      &#125;</span><br><span class="line">      public <span class="keyword">void</span> setStatus(<span class="built_in">String</span> status) &#123;</span><br><span class="line">         <span class="keyword">this</span>.status = status;</span><br><span class="line">      &#125;</span><br><span class="line">      @DynamoDBAttribute(attributeName=<span class="string">"progress"</span>) </span><br><span class="line">      public <span class="built_in">String</span> getProgress() &#123;</span><br><span class="line">         <span class="keyword">return</span> progress;</span><br><span class="line">      &#125;</span><br><span class="line">      public <span class="keyword">void</span> setProgress(<span class="built_in">String</span> progress) &#123;</span><br><span class="line">         <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.progress = progress;</span><br><span class="line">         &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>六 根据key查询<br> <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Return the Item By the primary key and value</span></span><br><span class="line"><span class="comment"> * 查询某一行的值</span></span><br><span class="line"><span class="comment"> * @param key		primary key of the table</span></span><br><span class="line"><span class="comment"> * @param keyValue  the value of primary key</span></span><br><span class="line"><span class="comment"> * @return</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">public Item query(<span class="built_in">String</span> key, <span class="built_in">Object</span> keyValue) &#123;</span><br><span class="line">	logger.debug(<span class="string">"进入query()"</span>);</span><br><span class="line">	logger.debug(<span class="string">"table:"</span>+tableName);</span><br><span class="line">	Table table = dynamoDB.getTable(tableName);</span><br><span class="line">	GetItemSpec spec = <span class="literal">null</span>;</span><br><span class="line">	<span class="keyword">if</span> (keyValue <span class="keyword">instanceof</span> <span class="built_in">Number</span>) &#123;</span><br><span class="line">		<span class="keyword">if</span> (keyValue <span class="keyword">instanceof</span> Integer) &#123;</span><br><span class="line">			int value = (Integer) keyValue;</span><br><span class="line">			spec = <span class="keyword">new</span> GetItemSpec().withPrimaryKey(key, keyValue);</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (keyValue <span class="keyword">instanceof</span> Double) &#123;</span><br><span class="line">			double value = (Double) keyValue;</span><br><span class="line">			spec = <span class="keyword">new</span> GetItemSpec().withPrimaryKey(key, value);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		spec = <span class="keyword">new</span> GetItemSpec().withPrimaryKey(key, keyValue);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		Item outcome = table.getItem(spec);</span><br><span class="line">		<span class="keyword">return</span> outcome;</span><br><span class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">		System.err.println(e.getMessage());</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>七 多主键联合查询<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Return the Item By the primary key and value</span></span><br><span class="line"><span class="comment"> * 查询某一行的值</span></span><br><span class="line"><span class="comment"> * @param key		primary key of the table</span></span><br><span class="line"><span class="comment"> * @param keyValue  the value of primary key</span></span><br><span class="line"><span class="comment"> * @return</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">public Item query(<span class="built_in">String</span> key, <span class="built_in">Object</span> keyValue) &#123;</span><br><span class="line">	logger.debug(<span class="string">"进入query()"</span>);</span><br><span class="line">	logger.debug(<span class="string">"table:"</span>+tableName);</span><br><span class="line">	Table table = dynamoDB.getTable(tableName);</span><br><span class="line">	GetItemSpec spec = <span class="literal">null</span>;</span><br><span class="line">	<span class="keyword">if</span> (keyValue <span class="keyword">instanceof</span> <span class="built_in">Number</span>) &#123;</span><br><span class="line">		<span class="keyword">if</span> (keyValue <span class="keyword">instanceof</span> Integer) &#123;</span><br><span class="line">			int value = (Integer) keyValue;</span><br><span class="line">			spec = <span class="keyword">new</span> GetItemSpec().withPrimaryKey(key, keyValue);</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (keyValue <span class="keyword">instanceof</span> Double) &#123;</span><br><span class="line">			double value = (Double) keyValue;</span><br><span class="line">			spec = <span class="keyword">new</span> GetItemSpec().withPrimaryKey(key, value);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		spec = <span class="keyword">new</span> GetItemSpec().withPrimaryKey(key, keyValue);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		Item outcome = table.getItem(spec);</span><br><span class="line">		<span class="keyword">return</span> outcome;</span><br><span class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">		System.err.println(e.getMessage());</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>八 scan方式查询<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * scan方式查询</span></span><br><span class="line"><span class="comment"> * scan方式查询dynamodb 表的数据</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 为结果分页</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> DynamoDB 会对 Query 和 Scan 操作的结果进行分页。分页后，Query 和 Scan 结果会划分到不同的页；应用程序可以先处理第一页结果，然后处理第二页结果，以此类推。从 Query 或 Scan 操作返回的数据限制为 1 MB；这意味着，如果结果集超出数据的 1 MB，您将需要执行另一个 Query 或 Scan 操作来检索数据的下一个 1 MB。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 如果您查询或扫描的特定属性的匹配值总数超过 1 MB 个数据，则需要再执行一次 Query 或 Scan 请求以获得后续 1 MB 个数据。为此，请从上一个请求获取 LastEvaluatedKey 值，将该值用作下一个请求中的 ExclusiveStartKey。利用此方法，您能够以 1 MB 为增量渐进式查询或扫描新数据。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 在处理完来自 Query 或 Scan 的整个结果集后，LastEvaluatedKey 是 null。这表明，此结果集是完整的（即该操作处理的是“最后一页”数据）。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 如果 LastEvaluatedKey 是除 null 以外的任何值，这an不一定意味着结果集中具有更多数据。了解您何时达到了结果集末尾的唯一方式是当 LastEvaluatedKey 是 null 时</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> * @param tableName	表名</span></span><br><span class="line"><span class="comment"> * @param filterColumn	过滤列名</span></span><br><span class="line"><span class="comment"> * @param filterValue	过滤列值</span></span><br><span class="line"><span class="comment"> * @param columns	查询列名，逗号分割</span></span><br><span class="line"><span class="comment"> * @param reservedKeyWordColumn 列名是保留关键字的，以逗号分割</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">public List&lt;<span class="built_in">Map</span>&lt;<span class="built_in">String</span>,<span class="built_in">String</span>&gt;&gt;  scan(<span class="built_in">String</span> tableName,<span class="built_in">String</span> filterColumn,<span class="built_in">String</span> filterValue,<span class="built_in">String</span> columns,<span class="built_in">String</span> reservedKeyWordColumn)&#123;</span><br><span class="line">	List&lt;<span class="built_in">Map</span>&lt;<span class="built_in">String</span>,<span class="built_in">String</span>&gt;&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">	<span class="built_in">Map</span>&lt;<span class="built_in">String</span>, AttributeValue&gt; expressionAttributeValues =</span><br><span class="line">			<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">	expressionAttributeValues.put(<span class="string">":val"</span>, <span class="keyword">new</span> AttributeValue().withS(filterValue));</span><br><span class="line">	<span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">String</span>&gt; expressionAttributeNames =</span><br><span class="line">			<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">	StringBuffer rColumns = <span class="keyword">new</span> StringBuffer(<span class="string">""</span>);</span><br><span class="line">	<span class="keyword">if</span>(StringUtils.isNotBlank(reservedKeyWordColumn))&#123;</span><br><span class="line">		<span class="built_in">String</span>[] rKeys = reservedKeyWordColumn.split(<span class="string">","</span>);</span><br><span class="line">		<span class="keyword">for</span>(<span class="built_in">String</span> rKey:rKeys)&#123;</span><br><span class="line">			expressionAttributeNames.put(<span class="string">"#"</span>+rKey,rKey);</span><br><span class="line">			rColumns.append(<span class="string">","</span>);</span><br><span class="line">			rColumns.append(<span class="string">"#"</span>+rKey);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">String</span> projections = columns + rColumns.toString();</span><br><span class="line">	ScanRequest scanRequest = <span class="keyword">new</span> ScanRequest()</span><br><span class="line">			.withTableName(tableName)</span><br><span class="line">			.withFilterExpression(filterColumn+<span class="string">" = :val"</span>)</span><br><span class="line">			.withProjectionExpression(projections)</span><br><span class="line">			.withExpressionAttributeValues(expressionAttributeValues)</span><br><span class="line">			.withLimit(<span class="number">50</span>);</span><br><span class="line">	<span class="keyword">if</span>(expressionAttributeNames.size() &gt; <span class="number">0</span>)&#123;</span><br><span class="line">		scanRequest.withExpressionAttributeNames(expressionAttributeNames);</span><br><span class="line">	&#125;</span><br><span class="line">	ScanResult result = client.scan(scanRequest);</span><br><span class="line">	<span class="built_in">String</span>[] columnNames = columns.split(<span class="string">","</span>);</span><br><span class="line">	<span class="built_in">String</span>[] rColumnNames = reservedKeyWordColumn.split(<span class="string">","</span>);</span><br><span class="line">	List&lt;<span class="built_in">Map</span>&lt;<span class="built_in">String</span>,<span class="built_in">String</span>&gt;&gt;  list1 = parseToList(result,columnNames,rColumnNames);</span><br><span class="line">	list.addAll(list1);</span><br><span class="line">	<span class="keyword">while</span> (result.getLastEvaluatedKey()!=<span class="literal">null</span>)&#123;</span><br><span class="line">		scanRequest.setExclusiveStartKey(result.getLastEvaluatedKey());</span><br><span class="line">		result = client.scan(scanRequest);</span><br><span class="line">		List&lt;<span class="built_in">Map</span>&lt;<span class="built_in">String</span>,<span class="built_in">String</span>&gt;&gt;  list2 = parseToList(result,columnNames,rColumnNames);</span><br><span class="line">		list.addAll(list2);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> list;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p> 九 根据key查询某个字段的值<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 根据key查询某个字段的值</span></span><br><span class="line"><span class="comment"> * 适合取某个字段的值</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * @param key       key名</span></span><br><span class="line"><span class="comment"> * @param keyValue  key值</span></span><br><span class="line"><span class="comment"> * @param param     字段名</span></span><br><span class="line"><span class="comment"> * @return 字段值</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">public <span class="built_in">String</span> getValuesByParam(<span class="built_in">String</span> key, <span class="built_in">Object</span> keyValue, <span class="built_in">String</span> param) &#123;</span><br><span class="line">	Item item = query(key, keyValue);</span><br><span class="line">	<span class="keyword">if</span> (item == <span class="literal">null</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">String</span> value = item.getString(param);</span><br><span class="line">	<span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>十 推送aws(插入记录)<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 推送AWS</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * @param path  batch.lst绝对路径</span></span><br><span class="line"><span class="comment">	 * @param batch 封装的Batch对象，需要参数：batch[生风任务编号],owner[生风所有者 默认为：k2data/当前登陆用户],version[ 程序版本 当前版 ：0.2],stage[默认位：wind_gen]</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	public boolean insertItem(<span class="built_in">String</span> path, Batch batch) &#123;</span><br><span class="line">		logger.debug(<span class="string">"准备插入batch表:"</span>+tableName);</span><br><span class="line"></span><br><span class="line">		List&lt;<span class="built_in">String</span>&gt; list = getFilePaths(path);</span><br><span class="line">		checkAwsIllegalToken(list);</span><br><span class="line">		<span class="built_in">String</span> task_list = makeCode(list, batch.getStage());</span><br><span class="line">		int calculationTime = evalCalculationTime(path, batch.getStage());</span><br><span class="line">		batch.setCalculation_time(calculationTime);</span><br><span class="line">		<span class="built_in">Date</span> date = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">		DateFormat format = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>);</span><br><span class="line">		<span class="built_in">String</span> time = format.format(date);<span class="comment">//time就是当前时间</span></span><br><span class="line">		batch.setCreated(time);</span><br><span class="line">		batch.setTotalDlcCount(list.size());</span><br><span class="line">			<span class="comment">/*batch.setOwner(batch.getOwner());</span></span><br><span class="line"><span class="comment">			batch.setVersion(batch.getVersion());*/</span></span><br><span class="line">		batch.setTask_list(task_list);</span><br><span class="line"></span><br><span class="line">		List&lt;Item&gt; items = <span class="keyword">new</span> ArrayList&lt;Item&gt;();</span><br><span class="line">		Item item = <span class="keyword">new</span> Item()</span><br><span class="line">				.withPrimaryKey(<span class="string">"batch"</span>, batch.getBatch())</span><br><span class="line">				.withString(<span class="string">"created"</span>, batch.getCreated())</span><br><span class="line">				.withNumber(<span class="string">"total_dlc_count"</span>, batch.getTotalDlcCount())</span><br><span class="line">				.withNumber(<span class="string">"calculation_time"</span>, batch.getCalculation_time())</span><br><span class="line">				.withString(<span class="string">"owner"</span>, batch.getOwner())</span><br><span class="line">				.withString(<span class="string">"version"</span>, batch.getVersion())</span><br><span class="line"><span class="comment">//				.withString("stage", batch.getStage())</span></span><br><span class="line">				.withString(<span class="string">"status"</span>, batch.getStatus())</span><br><span class="line">				.withString(<span class="string">"task_list"</span>, batch.getTask_list());</span><br><span class="line">		items.add(item);</span><br><span class="line">		logger.debug(<span class="string">"createItems  start..."</span>);</span><br><span class="line">		<span class="keyword">return</span> createItems(tableName, items);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 创建多个项目</span></span><br><span class="line"><span class="comment">	 *相当于sql中的添加多条记录</span></span><br><span class="line"><span class="comment">	 * @param tableName 表名</span></span><br><span class="line"><span class="comment">	 * @param list      列组合的item</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	public boolean createItems(<span class="built_in">String</span> tableName, List&lt;Item&gt; list) &#123;</span><br><span class="line">		Table table = dynamoDB.getTable(tableName);</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; list.size(); i++) &#123;</span><br><span class="line">				Item item = list.get(i);</span><br><span class="line">				PutItemOutcome outcome = table.putItem(item);</span><br><span class="line">				logger.debug(<span class="string">"AWS 生风任务推送成功:\n"</span> + outcome.getPutItemResult());</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			logger.debug(<span class="string">"AWS 生风任务推送失败."</span>);</span><br><span class="line">			logger.debug(e.getMessage());</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 创建单个项目</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * @param tableName 表名</span></span><br><span class="line"><span class="comment">	 * @param item      列组合的item</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	public <span class="keyword">void</span> createItem(<span class="built_in">String</span> tableName, Item item) &#123;</span><br><span class="line">		Table table = dynamoDB.getTable(tableName);</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			PutItemOutcome outcome = table.putItem(item);</span><br><span class="line">			System.out.println(<span class="string">"PutItem succeeded:\n"</span> + outcome.getPutItemResult());</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			System.err.println(<span class="string">"Create items failed."</span>);</span><br><span class="line">			System.err.println(e.getMessage());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+  
+</div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/aws/" rel="tag"><i class="fa fa-tag"></i> aws</a>
+          
+            <a href="/tags/dynamodb/" rel="tag"><i class="fa fa-tag"></i> dynamodb</a>
+          
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/15/其他服务器访问虚拟机中ubuntu系统的方法-1/" rel="next" title="其他服务器访问windows7的虚拟机vm中ubuntu系统的方法">
+                <i class="fa fa-chevron-left"></i> 其他服务器访问windows7的虚拟机vm中ubuntu系统的方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/01/用poi解析带分组级别的excel文件/" rel="prev" title="用poi解析带分组级别的excel文件">
+                用poi解析带分组级别的excel文件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="clb">
+          <p class="site-author-name" itemprop="name">clb</p>
+           
+              <p class="site-description motion-element" itemprop="description">IT JAVA</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">clb</span>
+</div>
+
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/clb/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/clb/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/clb/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/clb/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/clb/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/clb/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/clb/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,750 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/clb/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/clb/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="mysql,优化,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="前提介绍同样的mysql，同样的查询，为啥在不同的服务器上的查询效率差别有10几倍继上一篇索引优化后，在自己的服务器上已经从10几秒优化到了2s，以为万事大吉了，谁知道，同样的操作，在客户的服务器上优化后，还是比本机慢了10几倍当然了，客户服务器上添加完索引后，相对之前已经快了不少，sql查询已经优化到了极点 为什么会比自己的服务器慢10几倍呢？这让我开始怀疑客户服务器的内存使用 由于客户的mys">
+<meta name="keywords" content="mysql,优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql慢查询优化-内存清理篇">
+<meta property="og:url" content="http://clb7rowrain.com/2018/03/29/mysql慢查询优化-内存清理篇/index.html">
+<meta property="og:site_name" content="clb&#39;blog">
+<meta property="og:description" content="前提介绍同样的mysql，同样的查询，为啥在不同的服务器上的查询效率差别有10几倍继上一篇索引优化后，在自己的服务器上已经从10几秒优化到了2s，以为万事大吉了，谁知道，同样的操作，在客户的服务器上优化后，还是比本机慢了10几倍当然了，客户服务器上添加完索引后，相对之前已经快了不少，sql查询已经优化到了极点 为什么会比自己的服务器慢10几倍呢？这让我开始怀疑客户服务器的内存使用 由于客户的mys">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/29/mysql慢查询优化-内存清理篇/1.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/29/mysql慢查询优化-内存清理篇/2.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/29/mysql慢查询优化-内存清理篇/3.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/29/mysql慢查询优化-内存清理篇/4.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/29/mysql慢查询优化-内存清理篇/5.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/29/mysql慢查询优化-内存清理篇/6.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/29/mysql慢查询优化-内存清理篇/7.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/29/mysql慢查询优化-内存清理篇/8.jpg">
+<meta property="og:updated_time" content="2019-09-12T09:47:04.557Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql慢查询优化-内存清理篇">
+<meta name="twitter:description" content="前提介绍同样的mysql，同样的查询，为啥在不同的服务器上的查询效率差别有10几倍继上一篇索引优化后，在自己的服务器上已经从10几秒优化到了2s，以为万事大吉了，谁知道，同样的操作，在客户的服务器上优化后，还是比本机慢了10几倍当然了，客户服务器上添加完索引后，相对之前已经快了不少，sql查询已经优化到了极点 为什么会比自己的服务器慢10几倍呢？这让我开始怀疑客户服务器的内存使用 由于客户的mys">
+<meta name="twitter:image" content="http://clb7rowrain.com/2018/03/29/mysql慢查询优化-内存清理篇/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://clb7rowrain.com/2018/03/29/mysql慢查询优化-内存清理篇/">
+
+
+
+
+
+  <title> mysql慢查询优化-内存清理篇 | clb'blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+   <a href="https://github.com/RowRainclb"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
+
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">clb'blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">all is well</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://clb7rowrain.com/2018/03/29/mysql慢查询优化-内存清理篇/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="clb">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="clb'blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                mysql慢查询优化-内存清理篇
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-29T15:37:52+08:00">
+                2018-03-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前提介绍"><a href="#前提介绍" class="headerlink" title="前提介绍"></a>前提介绍</h1><p><strong>同样的mysql，同样的查询，为啥在不同的服务器上的查询效率差别有10几倍</strong><br>继上一篇索引优化后，在自己的服务器上已经从10几秒优化到了2s，以为万事大吉了，<br>谁知道，同样的操作，在客户的服务器上优化后，还是比本机慢了10几倍<br>当然了，客户服务器上添加完索引后，相对之前已经快了不少，sql查询已经优化到了极点</p>
+<p>为什么会比自己的服务器慢10几倍呢？<br>这让我开始怀疑客户服务器的内存使用</p>
+<p>由于客户的mysql，当时我是使用docker镜像，所以一开始想到的解决方案是扩大docker容器的内存</p>
+<pre><code>但是后来一想，即使内存扩大了，保不住下次还会不够用，为啥一个小小的mysql能把内存占满了，
+不行，必须从mysql上解决根本问题，而不是一位的扩大内存
+</code></pre><p>于是，我开始了如下操作：</p>
+<h1 id="解决过程"><a href="#解决过程" class="headerlink" title="解决过程"></a>解决过程</h1><h2 id="查看docker容器的cpu占用情况"><a href="#查看docker容器的cpu占用情况" class="headerlink" title="查看docker容器的cpu占用情况"></a>查看docker容器的cpu占用情况</h2><p><img src="1.jpg" alt></p>
+<p>神马？这么高！！！<br><img src="2.jpg" alt></p>
+<h2 id="查询存在的连接数"><a href="#查询存在的连接数" class="headerlink" title="查询存在的连接数"></a>查询存在的连接数</h2><p>  在mysql 输入 show processlist ;查询存在的连接数以及timeout的时间，可以帮助识别出有问题的查询语句</p>
+<p>   发现有好多造成查询慢的语句<br>   mysql&gt; show processlist;  //info只能查看前100字符<br>      show full processlist;  //查看所有info<br>      select * from information_schema.<code>PROCESSLIST</code> t WHERE t.COMMAND in ‘Query’<br><img src="3.jpg" alt></p>
+<h2 id="修改wait-timeout"><a href="#修改wait-timeout" class="headerlink" title="修改wait_timeout"></a>修改wait_timeout</h2><blockquote>
+<p><strong>wait_timeout：mysql服务器关闭非交互连接之前等待活动的秒数。</strong><br>    wait_timeout过大有弊端，MySQL里大量的SLEEP连接无法及时释放，拖累系统性能；<br>    设置过小，可能会遇到“MySQL has gone away”之类的报错<br>    Linux系统中，默认是28800秒，可设置最小值1，最大值31536000</p>
+</blockquote>
+<p>此处我们设置100<br><img src="4.jpg" alt></p>
+<p> <strong>设置完之后查看cpu占用率</strong>（设置完之后不确定会不会马上降低）<br>   但是cpu占用率确实降 了一半<br>  <img src="5.jpg" alt></p>
+<h2 id="kill锁表语句与慢sql"><a href="#kill锁表语句与慢sql" class="headerlink" title="kill锁表语句与慢sql"></a>kill锁表语句与慢sql</h2><blockquote>
+<pre><code>研究了一下，怎么kill掉慢的sql语句
+</code></pre><p>  1 单个kill<br>  mysql&gt; show processlist;<br>  mysql &gt; kill 251;<br>  2 批量kill<br>  2.1查找Lockd语句<br>  mysql -uroot -p123456 -h 192.1.20.101 -e “show processlist” | grep -i ‘Locked’ &gt; locked_log.txt<br>  2.2   组合kill<br>    for line in <code>cat locked_log.txt | awk &#39;{print $1}&#39;</code><br>    do<br>       echo “kill $line;” &gt;&gt; kill_thread_id.sql<br>    done<br>    3)执行<br>  mysql&gt;source kill_thread_id.sq</p>
+</blockquote>
+<p><img src="6.jpg" alt><br><strong> kill完成后，再次查看cpu占用率</strong><br><img src="7.jpg" alt></p>
+<p> <strong>再次执行查询语句，发现已经可以降低到2s左右</strong><br><img src="8.jpg" alt></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+  
+</div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"><i class="fa fa-tag"></i> mysql</a>
+          
+            <a href="/tags/优化/" rel="tag"><i class="fa fa-tag"></i> 优化</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/28/mysql千万级数据量优化总结/" rel="next" title="mysql慢查询优化-千万级数据量">
+                <i class="fa fa-chevron-left"></i> mysql慢查询优化-千万级数据量
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/08/docker构建nginx1-13/" rel="prev" title="docker构建nginx1.13">
+                docker构建nginx1.13 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="clb">
+          <p class="site-author-name" itemprop="name">clb</p>
+           
+              <p class="site-description motion-element" itemprop="description">IT JAVA</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前提介绍"><span class="nav-number">1.</span> <span class="nav-text">前提介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决过程"><span class="nav-number">2.</span> <span class="nav-text">解决过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#查看docker容器的cpu占用情况"><span class="nav-number">2.1.</span> <span class="nav-text">查看docker容器的cpu占用情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询存在的连接数"><span class="nav-number">2.2.</span> <span class="nav-text">查询存在的连接数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改wait-timeout"><span class="nav-number">2.3.</span> <span class="nav-text">修改wait_timeout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kill锁表语句与慢sql"><span class="nav-number">2.4.</span> <span class="nav-text">kill锁表语句与慢sql</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">clb</span>
+</div>
+
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/clb/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/clb/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/clb/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/clb/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/clb/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/clb/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/clb/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>

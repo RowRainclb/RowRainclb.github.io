@@ -1,0 +1,754 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/clb/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/clb/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="微信小程序,https,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="域名登陆腾讯云平台 https://cloud.tencent.com/ 并且注册账号选择产品-域名注册输入自己感兴趣的域名前缀，点击搜索挑选一个后缀（由于clb7.xyz做活动，一年一元，我选择了这个）加入购物车，点击立即购买即可 点击控制台进入后台界面选择域名管理，可以查看自己注册的域名 SSL证书管理选择“云产品”—”域名服务“—”SSL证书管理”，选择“申请证书（免费）”。若未认证，系统将">
+<meta name="keywords" content="微信小程序,https">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信小程序--搭建自己的https服务器">
+<meta property="og:url" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/index.html">
+<meta property="og:site_name" content="clb&#39;blog">
+<meta property="og:description" content="域名登陆腾讯云平台 https://cloud.tencent.com/ 并且注册账号选择产品-域名注册输入自己感兴趣的域名前缀，点击搜索挑选一个后缀（由于clb7.xyz做活动，一年一元，我选择了这个）加入购物车，点击立即购买即可 点击控制台进入后台界面选择域名管理，可以查看自己注册的域名 SSL证书管理选择“云产品”—”域名服务“—”SSL证书管理”，选择“申请证书（免费）”。若未认证，系统将">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/1.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/2.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/3.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/4.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/5.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/6.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/7.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/8.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/9.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/10.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/11.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/12.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/13.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/14.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/15.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/17.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/16.jpg">
+<meta property="og:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/18.jpg">
+<meta property="og:updated_time" content="2019-08-20T11:28:55.015Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="微信小程序--搭建自己的https服务器">
+<meta name="twitter:description" content="域名登陆腾讯云平台 https://cloud.tencent.com/ 并且注册账号选择产品-域名注册输入自己感兴趣的域名前缀，点击搜索挑选一个后缀（由于clb7.xyz做活动，一年一元，我选择了这个）加入购物车，点击立即购买即可 点击控制台进入后台界面选择域名管理，可以查看自己注册的域名 SSL证书管理选择“云产品”—”域名服务“—”SSL证书管理”，选择“申请证书（免费）”。若未认证，系统将">
+<meta name="twitter:image" content="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/">
+
+
+
+
+
+  <title> 微信小程序--搭建自己的https服务器 | clb'blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+   <a href="https://github.com/RowRainclb"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
+
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">clb'blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">all is well</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://clb7rowrain.com/2018/03/09/微信小程序-搭建自己的https服务器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="clb">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="clb'blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                微信小程序--搭建自己的https服务器
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-09T10:20:10+08:00">
+                2018-03-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h2><p>登陆腾讯云平台 <a href="https://cloud.tencent.com/" target="_blank" rel="noopener">https://cloud.tencent.com/</a> 并且注册账号<br><img src="1.jpg" alt><br>选择产品-域名注册<br><img src="2.jpg" alt><br>输入自己感兴趣的域名前缀，点击搜索<br><img src="3.jpg" alt><br>挑选一个后缀<br>（由于clb7.xyz做活动，一年一元，我选择了这个）<br><img src="4.jpg" alt><br>加入购物车，点击立即购买即可</p>
+<p>点击控制台进入后台界面<br><img src="5.jpg" alt><br>选择域名管理，可以查看自己注册的域名<br><img src="6.jpg" alt><br><img src="7.jpg" alt></p>
+<h2 id="SSL证书管理"><a href="#SSL证书管理" class="headerlink" title="SSL证书管理"></a>SSL证书管理</h2><h3 id="选择“云产品”—”域名服务“—”SSL证书管理”，选择“申请证书（免费）”。若未认证，系统将提示进入系统认证"><a href="#选择“云产品”—”域名服务“—”SSL证书管理”，选择“申请证书（免费）”。若未认证，系统将提示进入系统认证" class="headerlink" title="选择“云产品”—”域名服务“—”SSL证书管理”，选择“申请证书（免费）”。若未认证，系统将提示进入系统认证"></a>选择“云产品”—”域名服务“—”SSL证书管理”，选择“申请证书（免费）”。若未认证，系统将提示进入系统认证</h3><h3 id="个人认证。"><a href="#个人认证。" class="headerlink" title="个人认证。"></a>个人认证。</h3><h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><p>点击域名的“解析”：<br><img src="8.jpg" alt><br>“添加记录”或者“新手快速添加”，服务器ip地址一定要让外网访问到（填写内网ip，或者外网ip地址访问不到，后面https都会拒绝访问）<br><img src="9.jpg" alt></p>
+<h3 id="下载SSL证书。用于服务配置"><a href="#下载SSL证书。用于服务配置" class="headerlink" title="下载SSL证书。用于服务配置"></a>下载SSL证书。用于服务配置</h3><p>点击“ssl证书管理”–”申请证书”<br><img src="10.jpg" alt><br><img src="11.jpg" alt><br><img src="12.jpg" alt></p>
+<p>下载证书<br><img src="13.jpg" alt></p>
+<h2 id="腾讯云免费SSL与Tomcat7的集成"><a href="#腾讯云免费SSL与Tomcat7的集成" class="headerlink" title="腾讯云免费SSL与Tomcat7的集成"></a>腾讯云免费SSL与Tomcat7的集成</h2><p>本地安装证书。<br>下载并解压证书，包含如下文件<br><img src="14.jpg" alt></p>
+<p>打开tomcat文件夹，将<a href="http://www.clb7.xyz.jks文件复制到tomcat的conf目录下" target="_blank" rel="noopener">www.clb7.xyz.jks文件复制到tomcat的conf目录下</a><br><img src="15.jpg" alt></p>
+<p>编辑server.xml<br>将  以下代码的注释放开 或者 复制一份<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;Connector port=<span class="string">"8443"</span> protocol=<span class="string">"org.apache.coyote.http11.Http11Protocol"</span></span><br><span class="line">              maxThreads=<span class="string">"150"</span> SSLEnabled=<span class="string">"true"</span> scheme=<span class="string">"https"</span> secure=<span class="string">"true"</span></span><br><span class="line">              clientAuth=<span class="string">"false"</span> sslProtocol=<span class="string">"TLS"</span> /&gt;</span><br></pre></td></tr></table></figure></p>
+<p>修改为：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;Connector SSLEnabled=<span class="string">"true"</span> acceptCount=<span class="string">"100"</span>   </span><br><span class="line">					    clientAuth=<span class="string">"false"</span> disableUploadTimeout=<span class="string">"true"</span>   </span><br><span class="line">					    enableLookups=<span class="string">"true"</span>   </span><br><span class="line">					    keystoreFile=<span class="string">"conf/www.clb7.xyz.jks"</span> </span><br><span class="line">					    keystorePass=<span class="string">"xxxx"</span> </span><br><span class="line">					    maxThreads=<span class="string">"200"</span>   </span><br><span class="line">					    port=<span class="string">"443"</span>   </span><br><span class="line">					    protocol=<span class="string">"org.apache.coyote.http11.Http11Protocol"</span>     </span><br><span class="line">					    scheme=<span class="string">"https"</span> secure=<span class="string">"true"</span> sslProtocol=<span class="string">"TLS"</span>/&gt;</span><br></pre></td></tr></table></figure></p>
+<p><table><br>  <tr><br>    <th width="40%">配置文件参数</th><br>    <th width="50%">说明</th><br>  </tr><br>  <tr><br>    <td>SSLEngine on </td><br>    <td> 启用SSL功能  </td><br>  </tr><br>  <tr><br>    <td>certificateKeystoreFile</td><br>    <td> 证书文件(具体包含证书文件路径) </td><br>  </tr><tr><br>    <td> certificateKeystorePassword </td><br>    <td>  证书验证密码 </td><br>  </tr><br>    <tr><br>    <td> clientAuth </td><br>    <td>  指定是否需要验证客户端证书,如果该设置为“false”,则为单向SSL验证 </td><br>  </tr><br>    <tr><br>    <td> sslProtocol </td><br>    <td>  使用的协议 </td><br>  </tr><br>    <tr><br>    <td> type </td><br>    <td>  证书类型 </td><br>  </tr><br>      <tr><br>    <td> certificateKeyAlias </td><br>    <td>  是证书别名，放访问域名 </td><br>  </tr><br></table><br>启动tomcat服务器,访问域名：</p>
+<p>在使用 Chrome 56 以上版本就会发现，打开HTTP 网站将在地址栏出现 “不安全” 的红色警示。而很多企业已经将其网站直接转向HTTPS连接，网址前已经增加了一个小锁样式的图标。别看这么简单的一个“小锁”，它却极大保障了网站的信息安全，大大避免了用户隐私泄露和流量劫持的现象。<br>Chrome访问：<br><img src="17.jpg" alt></p>
+<p>使用火狐浏览器访问：<br><img src="16.jpg" alt></p>
+<h2 id="腾讯云免费SSL与nginx的集成"><a href="#腾讯云免费SSL与nginx的集成" class="headerlink" title="腾讯云免费SSL与nginx的集成"></a>腾讯云免费SSL与nginx的集成</h2><p>将证书目录nginx下面的1_<a href="http://www.clb7.xyz_bundle.crt" target="_blank" rel="noopener">www.clb7.xyz_bundle.crt</a> 和 2_<a href="http://www.clb7.xyz.key" target="_blank" rel="noopener">www.clb7.xyz.key</a> 2个文件，传到服务器nginx目录下面，（与nginx.conf文件在同一个目录下）<br>编辑nginx.conf<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">      listen <span class="number">443</span>;</span><br><span class="line">      server_name www.clb7.xyz;</span><br><span class="line">      ssl on;</span><br><span class="line">      ssl_certificate <span class="number">1</span>_www.clb7.xyz_bundle.crt;</span><br><span class="line">      ssl_certificate_key <span class="number">2</span>_www.clb7.xyz.key;</span><br><span class="line">      ssl_session_timeout <span class="number">5</span>m;</span><br><span class="line">      ssl_protocols TLSv1 TLSv1<span class="number">.1</span> TLSv1<span class="number">.2</span>;</span><br><span class="line">      ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;</span><br><span class="line">      ssl_prefer_server_ciphers on;</span><br><span class="line">      location / &#123;</span><br><span class="line">              proxy_pass http:<span class="comment">//192.168.x.x:8081;</span></span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>访问后台接口,成功<br><img src="18.jpg" alt></p>
+<p>也可参考“证书安装指引”：<a href="https://cloud.tencent.com/document/product/400/4143" target="_blank" rel="noopener">https://cloud.tencent.com/document/product/400/4143</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+  
+</div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/微信小程序/" rel="tag"><i class="fa fa-tag"></i> 微信小程序</a>
+          
+            <a href="/tags/https/" rel="tag"><i class="fa fa-tag"></i> https</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/08/微信小程序-系统登陆/" rel="next" title="微信小程序-系统登陆">
+                <i class="fa fa-chevron-left"></i> 微信小程序-系统登陆
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/28/mysql千万级数据量优化总结/" rel="prev" title="mysql慢查询优化-千万级数据量">
+                mysql慢查询优化-千万级数据量 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="clb">
+          <p class="site-author-name" itemprop="name">clb</p>
+           
+              <p class="site-description motion-element" itemprop="description">IT JAVA</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#域名"><span class="nav-number">1.</span> <span class="nav-text">域名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSL证书管理"><span class="nav-number">2.</span> <span class="nav-text">SSL证书管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#选择“云产品”—”域名服务“—”SSL证书管理”，选择“申请证书（免费）”。若未认证，系统将提示进入系统认证"><span class="nav-number">2.1.</span> <span class="nav-text">选择“云产品”—”域名服务“—”SSL证书管理”，选择“申请证书（免费）”。若未认证，系统将提示进入系统认证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#个人认证。"><span class="nav-number">2.2.</span> <span class="nav-text">个人认证。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解析"><span class="nav-number">2.3.</span> <span class="nav-text">解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载SSL证书。用于服务配置"><span class="nav-number">2.4.</span> <span class="nav-text">下载SSL证书。用于服务配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#腾讯云免费SSL与Tomcat7的集成"><span class="nav-number">3.</span> <span class="nav-text">腾讯云免费SSL与Tomcat7的集成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#腾讯云免费SSL与nginx的集成"><span class="nav-number">4.</span> <span class="nav-text">腾讯云免费SSL与nginx的集成</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">clb</span>
+</div>
+
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/clb/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/clb/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/clb/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/clb/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/clb/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/clb/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/clb/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>
